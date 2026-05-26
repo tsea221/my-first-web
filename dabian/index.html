@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人主页 | 摄影爱好者</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Microsoft YaHei', sans-serif;
+            background: #fbfbfd;
+            color: #1d1d1f;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* 导航栏 */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 48px;
+            background: rgba(251, 251, 253, 0.8);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        nav a {
+            color: #1d1d1f;
+            text-decoration: none;
+            padding: 0 20px;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        nav a:hover {
+            opacity: 1;
+        }
+
+        /* Hero 区域 */
+        .hero {
+            padding: 140px 20px 80px;
+            text-align: center;
+            background: linear-gradient(180deg, #fbfbfd 0%, #f5f5f7 100%);
+        }
+
+        .hero-label {
+            font-size: 17px;
+            color: #6e6e73;
+            margin-bottom: 10px;
+        }
+
+        .hero h1 {
+            font-size: clamp(40px, 8vw, 64px);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, #1d1d1f 0%, #424245 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 21px;
+            color: #6e6e73;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* 头像 */
+        .avatar-wrapper {
+            margin: 50px auto 0;
+            width: 120px;
+            height: 120px;
+        }
+
+        .avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.25);
+        }
+
+        /* 分割线标题 */
+        .section-title {
+            text-align: center;
+            padding: 80px 20px 40px;
+        }
+
+        .section-title h2 {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .section-title p {
+            font-size: 17px;
+            color: #6e6e73;
+            margin-top: 10px;
+        }
+
+        /* 自我介绍 */
+        .intro-section {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 0 20px 80px;
+        }
+
+        .intro-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .intro-card {
+            background: #fff;
+            border-radius: 18px;
+            padding: 30px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .intro-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .intro-card .icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+
+        .intro-card h3 {
+            font-size: 21px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .intro-card p {
+            font-size: 15px;
+            color: #6e6e73;
+            line-height: 1.6;
+        }
+
+        /* 摄影作品 */
+        .gallery-section {
+            background: #fff;
+            padding: 0 0 80px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 16px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .photo-item {
+            position: relative;
+            border-radius: 18px;
+            overflow: hidden;
+            aspect-ratio: 4/3;
+            background: #f5f5f7;
+            cursor: pointer;
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .photo-item:hover img {
+            transform: scale(1.03);
+        }
+
+        .photo-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #86868b;
+            gap: 12px;
+            background: linear-gradient(135deg, #f5f5f7 0%, #e8e8ed 100%);
+        }
+
+        .photo-placeholder .icon {
+            font-size: 48px;
+            opacity: 0.6;
+        }
+
+        .photo-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 40px 24px 24px;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
+            color: #fff;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .photo-item:hover .photo-info {
+            opacity: 1;
+        }
+
+        .photo-info h4 {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .photo-info p {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        /* 联系方式 */
+        .contact-section {
+            background: #f5f5f7;
+            padding: 80px 20px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .contact-item {
+            background: #fff;
+            border-radius: 18px;
+            padding: 30px 20px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .qr-code {
+            width: 140px;
+            height: 140px;
+            background: #f5f5f7;
+            border-radius: 12px;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #86868b;
+            font-size: 13px;
+        }
+
+        .contact-item h4 {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+
+        /* 页脚 */
+        footer {
+            background: #f5f5f7;
+            padding: 40px 20px;
+            text-align: center;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        footer p {
+            font-size: 13px;
+            color: #86868b;
+        }
+
+        footer a {
+            color: #424245;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* 按钮 */
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            background: #0071e3;
+            color: #fff;
+            border-radius: 980px;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #0077ed;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .photo-item {
+                aspect-ratio: 16/10;
+            }
+
+            nav {
+                font-size: 11px;
+            }
+
+            nav a {
+                padding: 0 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav>
+        <a href="#about">关于我</a>
+        <a href="#works">作品集</a>
+        <a href="#contact">联系方式</a>
+    </nav>
+
+    <!-- Hero 区域 -->
+    <section class="hero">
+        <p class="hero-label">摄影爱好者</p>
+        <h1>用镜头记录生活</h1>
+        <p>每一张照片，都是一个故事</p>
+        <div class="avatar-wrapper">
+            <div class="avatar">📷</div>
+        </div>
+    </section>
+
+    <!-- 关于我 -->
+    <section id="about">
+        <div class="section-title">
+            <h2>关于我</h2>
+            <p>热爱摄影的大学生，用心感受世界的美好</p>
+        </div>
+        <div class="intro-section">
+            <div class="intro-grid">
+                <div class="intro-card">
+                    <div class="icon">🎯</div>
+                    <h3>摄影理念</h3>
+                    <p>我相信最好的照片来自于对生活的热爱。摄影不仅是记录，更是发现美、感受美的过程。</p>
+                </div>
+                <div class="intro-card">
+                    <div class="icon">🌅</div>
+                    <h3>拍摄领域</h3>
+                    <p>从校园风景到城市街拍，从人文纪实到创意人像，我喜欢尝试不同的摄影风格。</p>
+                </div>
+                <div class="intro-card">
+                    <div class="icon">✨</div>
+                    <h3>后期风格</h3>
+                    <p>擅长使用 Lightroom 和 Photoshop 进行后期调色，追求自然、清新的视觉风格。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 摄影作品 -->
+    <section id="works" class="gallery-section">
+        <div class="section-title">
+            <h2>摄影作品</h2>
+            <p>精选作品展示</p>
+        </div>
+        <div class="gallery-grid">
+            <div class="photo-item">
+                <img src="school.jpg" alt="晨曦微光">
+                <div class="photo-info">
+                    <h4>晨曦微光</h4>
+                    <p>校园清晨的第一缕阳光</p>
+                </div>
+            </div>
+            <div class="photo-item">
+                <img src="city.jpg" alt="城市之夜">
+                <div class="photo-info">
+                    <h4>城市之夜</h4>
+                    <p>霓虹灯下的都市繁华</p>
+                </div>
+            </div>
+            <div class="photo-item">
+                <img src="fireworks1..jpg" alt="秋日私语">
+                <div class="photo-info">
+                    <h4>秋日私语</h4>
+                    <p>金黄落叶铺满小径</p>
+                </div>
+            </div>
+            <div class="photo-item">
+                <img src="fireworks2.jpg" alt="春日花语">
+                <div class="photo-info">
+                    <h4>春日花语</h4>
+                    <p>樱花盛开的季节</p>
+                </div>
+            </div>
+            <div class="photo-item">
+                <img src="soccer game.jpg" alt="人文纪实">
+                <div class="photo-info">
+                    <h4>人文纪实</h4>
+                    <p>记录真实的生活瞬间</p>
+                </div>
+            </div>
+            <div class="photo-item">
+                <img src="bridge.jpg" alt="山水之间">
+                <div class="photo-info">
+                    <h4>山水之间</h4>
+                    <p>大自然的壮美画卷</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系方式 -->
+    <section id="contact" class="contact-section">
+        <div class="section-title">
+            <h2>联系我</h2>
+            <p>期待与你交流摄影心得</p>
+        </div>
+        <div class="contact-grid">
+            <div class="contact-item">
+                <div class="qr-code"><img src="wechat.png" alt="微信二维码" style="width:100%;height:100%;object-fit:cover;border-radius:12px;"></div>
+                <h4>微信</h4>
+            </div>
+            <div class="contact-item">
+                <div class="qr-code"><img src="qq.png" alt="QQ二维码" style="width:100%;height:100%;object-fit:cover;border-radius:12px;"></div>
+                <h4>QQ</h4>
+            </div>
+            <div class="contact-item">
+                <div class="qr-code"><img src="tiktok.jpg" alt="公众号二维码" style="width:100%;height:100%;object-fit:cover;border-radius:12px;"></div>
+                <h4>公众号</h4>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer>
+        <p>© 2026 摄影爱好者 · 用心记录每一刻美好</p>
+        <p style="margin-top: 10px;">
+            <a href="mailto:example@email.com">example@email.com</a>
+        </p>
+    </footer>
+</body>
+</html>
